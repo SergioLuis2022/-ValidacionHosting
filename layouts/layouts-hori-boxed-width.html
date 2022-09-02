@@ -1032,7 +1032,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Domninio disponible, ingrese su correo para completar el registro</h5>
+                    <h5 class="modal-title">Dominio disponible, ingrese su correo para completar el registro</h5>
                     <button type="button" class="close cerrarModal" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -1064,21 +1064,34 @@
         <script src="assets/js/pages/dashboard.init.js"></script>
 
         <script src="assets/js/app.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.all.min.js"></script>
     </body>
 
 <!-- Mirrored from themesbrand.com/skote/layouts/layouts-hori-boxed-width.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Jan 2022 19:59:21 GMT -->
 </html>
 <script>
+    const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+                })
+    
 function validarHost(){
-    $(".cerrarModal").click(function(){
-        $("#ModalValidacionCorreo").modal('hide')
-    });
-    $('#examplemm').modal('show');
     try {
     let dominio = $("#txtDominio").val();
     let extension = $("#extensionCbo").val();
     if(dominio == "") {
-        alert("ingrese un dominio"); return;
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Debe Ingresar un dominio!'
+        }); return;        
     }
     var settings = {
         "url": `https://api-dominio.samishop.pe/domains/existe/${dominio}${extension}`,
@@ -1089,25 +1102,51 @@ function validarHost(){
         if(response.bEstado == true) {
             $('#div_HostEncontrado').removeClass("invisible");
         }
-         else {
+         else {     
             $('#div_HostEncontrado').addClass("invisible");
             // alert( "DOMINIO DISPONIBLE");            
             $('#ModalValidacionCorreo').modal('show');
-            
          }
     });
     }
     catch (e) {
-        alert(e.message)
+        console.log(e);
     } finally {
         $("#extensionCbo").prop("selectedIndex", 0).val();
     }
     
 }
+$(".cerrarModal").click(function(){
+        $("#ModalValidacionCorreo").modal('hide')
+    });
+    
 function validarCorreo(){
     let Correo = $("#txtCorreoModal").val();
     if(Correo == ""){
-        alert("Debe ingresar un correo");
-    }
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Debe Ingresar un correo!'
+        }); return;
+    } 
+    $.post("https://api-autenticacion.samishop.pe/users/administrador/constrasena/recuperar",
+        {
+            "correo":`${Correo}`,
+            "dominio":"sami3.samishop.pe",
+        },
+        function(data){
+            console.log(data);
+            if(data.bEstado == false) {
+                Toast.fire({
+                icon: 'error',
+                title: 'Correo no encontrado'
+                })
+            } else {
+                Toast.fire({
+                icon: 'success',
+                title: 'se envio un correo de validacion !'
+                })
+            }
+        });
 }
 </script>
