@@ -1051,6 +1051,30 @@
               </div>
             </div>
           </div>
+          <div id="ModalCodigoValidacion" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Validar Codigo</h5>
+                    <button type="button" class="close cerrarModal" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <label id="lblMensajeCodValidacion"></label>
+                        <div class="col-sm-12">
+                            <label for="txtCodigoValidacion">Codigo Validacion</label>
+                            <input type="text" class="form-control" id="txtCodigoValidacion">
+                        </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" onclick="validarCodigo()">Validar</button>
+                </div>
+              </div>
+            </div>
+          </div>
         <!-- JAVASCRIPT -->
         <script src="assets/libs/jquery/jquery.min.js"></script>
         <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -1103,9 +1127,8 @@ function validarHost(){
             $('#div_HostEncontrado').removeClass("invisible");
         }
          else {     
-            $('#div_HostEncontrado').addClass("invisible");
-            // alert( "DOMINIO DISPONIBLE");            
-            $('#ModalValidacionCorreo').modal('show');
+            $('#div_HostEncontrado').addClass("invisible");         
+            $('#ModalValidacionCorreo').modal('show');          
          }
     });
     }
@@ -1117,7 +1140,8 @@ function validarHost(){
     
 }
 $(".cerrarModal").click(function(){
-        $("#ModalValidacionCorreo").modal('hide')
+        $("#ModalValidacionCorreo").modal('hide');
+        $("#ModalCodigoValidacion").modal('hide');
     });
     
 function validarCorreo(){
@@ -1129,7 +1153,7 @@ function validarCorreo(){
             text: 'Debe Ingresar un correo!'
         }); return;
     } 
-    $.post("https://api-autenticacion.samishop.pe/users/administrador/constrasena/recuperar",
+    $.post("http://localhost:9000/users/administrador/codverificacion/enviar",
         {
             "correo":`${Correo}`,
             "dominio":"sami3.samishop.pe",
@@ -1142,10 +1166,43 @@ function validarCorreo(){
                 title: 'Correo no encontrado'
                 })
             } else {
+                $("#ModalValidacionCorreo").modal('hide');
+                $("#ModalCodigoValidacion").modal('show');
                 Toast.fire({
                 icon: 'success',
                 title: 'se envio un correo de validacion !'
                 })
+            }
+        });
+}
+function validarCodigo(){
+    let CodigoVal = $("#txtCodigoValidacion").val().toString();
+    if(CodigoVal == ""){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'No se ingreso ningun codigo'
+        }); return;
+    } 
+    $.post("http://localhost:9000/users/administrador/codverificacion/consultar",
+        {
+            "correo": "sergio.quispe@samishop.pe",
+            "codigo_validacion" : `${CodigoVal}`
+        },
+        function(data){
+            if(data == false) {
+                Toast.fire({
+                icon: 'error',
+                title: 'El codigo no coincide'
+                })
+            } else {                
+                $("#ModalCodigoValidacion").modal('hide');                
+                window.location.href = "file:///C:/Users/Sergio/Desktop/skote/layouts/PAGINABIENVENIDA.html";
+                Toast.fire({
+                icon: 'success',
+                title: 'Codigo Validado Correctamente !'
+                });
+                
             }
         });
 }
