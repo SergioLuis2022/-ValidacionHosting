@@ -1156,10 +1156,9 @@ function validarCorreo(){
     $.post("http://localhost:9000/users/administrador/codverificacion/enviar",
         {
             "correo":`${Correo}`,
-            "dominio":"sami3.samishop.pe",
+            "dominio": $("#txtDominio").val().toString(),
         },
         function(data){
-            console.log(data);
             if(data.bEstado == false) {
                 Toast.fire({
                 icon: 'error',
@@ -1171,12 +1170,14 @@ function validarCorreo(){
                 Toast.fire({
                 icon: 'success',
                 title: 'se envio un correo de validacion !'
-                })
+                });
+                localStorage.setItem( 'Dominio_cliente', $("#txtDominio").val().toString() );
+                localStorage.setItem( 'Correo_cliente', $("#txtCorreoModal").val().toString() );
             }
         });
 }
 function validarCodigo(){
-    let CodigoVal = $("#txtCodigoValidacion").val().toString();
+    let CodigoVal = $("#txtCodigoValidacion").val().trim().toString();
     if(CodigoVal == ""){
         Swal.fire({
             icon: 'error',
@@ -1195,15 +1196,22 @@ function validarCodigo(){
                 icon: 'error',
                 title: 'El codigo no coincide'
                 })
+                $("#txtCodigoValidacion").val('');
+                $("#txtCodigoValidacion").focus();
             } else {                
                 $("#ModalCodigoValidacion").modal('hide');                
-                window.location.href = "file:///C:/Users/Sergio/Desktop/skote/layouts/PAGINABIENVENIDA.html";
+                window.location.href = "./layouts-hori-boxed-width-2.html";
                 Toast.fire({
                 icon: 'success',
                 title: 'Codigo Validado Correctamente !'
                 });
+                limpiar_inputs();
                 
             }
         });
+}
+function limpiar_inputs(){
+    $("#txtCorreoModal").val('');
+    $("#txtCodigoValidacion").val('');
 }
 </script>
