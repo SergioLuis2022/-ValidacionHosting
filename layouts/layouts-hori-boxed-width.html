@@ -20,6 +20,7 @@
         <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
         <!-- App Css-->
         <link href="assets/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
+        <link href="./waitMe.min.css"  rel="stylesheet" type="text/css" />
 
     </head>
 
@@ -1089,11 +1090,13 @@
 
         <script src="assets/js/app.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.29/dist/sweetalert2.all.min.js"></script>
+        <script src="./waitMe.min.js"></script>
     </body>
 
 <!-- Mirrored from themesbrand.com/skote/layouts/layouts-hori-boxed-width.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 14 Jan 2022 19:59:21 GMT -->
 </html>
 <script>
+     var Correo = "";
     const Toast = Swal.mixin({
                 toast: true,
                 position: 'top-end',
@@ -1104,10 +1107,9 @@
                     toast.addEventListener('mouseenter', Swal.stopTimer)
                     toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
-                })
-    
+                })                
 function validarHost(){
-    try {
+    try {        
     let dominio = $("#txtDominio").val();
     let extension = $("#extensionCbo").val();
     if(dominio == "") {
@@ -1145,7 +1147,7 @@ $(".cerrarModal").click(function(){
     });
     
 function validarCorreo(){
-    let Correo = $("#txtCorreoModal").val();
+    Correo = $("#txtCorreoModal").val();
     if(Correo == ""){
         Swal.fire({
             icon: 'error',
@@ -1177,6 +1179,7 @@ function validarCorreo(){
         });
 }
 function validarCodigo(){
+    Correo = $("#txtCorreoModal").val();
     let CodigoVal = $("#txtCodigoValidacion").val().trim().toString();
     if(CodigoVal == ""){
         Swal.fire({
@@ -1187,7 +1190,7 @@ function validarCodigo(){
     } 
     $.post("http://localhost:9000/users/administrador/codverificacion/consultar",
         {
-            "correo": "sergio.quispe@samishop.pe",
+            "correo": Correo,
             "codigo_validacion" : `${CodigoVal}`
         },
         function(data){
