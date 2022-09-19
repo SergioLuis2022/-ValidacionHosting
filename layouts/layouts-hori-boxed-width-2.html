@@ -436,9 +436,10 @@
 
                         <!-- start page title -->
                         
-    <div class="row" style="margin-top: -50px;">
+    <div class="row" style="margin-top: -50px;">        
+       <center> 
         <h1 id="Titulo_Bienvenida_T"></h1>
-       <center> <h5 id="Subtitulo_Bienvenida_T"></h5> </center> 
+        <h5 id="Subtitulo_Bienvenida_T"></h5> </center> 
       <div class="col-sm-12" style="padding-left: 50px; padding-right: 50px; margin-top: 20px; overflow: auto;">
           <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
@@ -754,8 +755,8 @@
 <script>
     var Correo_cli =  localStorage.getItem("Correo_cliente");  
     var Dominio_cli = localStorage.getItem("Dominio_cliente");
-    $("#Titulo_Bienvenida_T").text(`Hola ${Correo_cli} Bienvenido a tu tienda !!` );    
-    $("#Subtitulo_Bienvenida_T").text(`Tu Dominio es ${Dominio_cli} Escoje un template que se ajuste a tu estilo` );    
+    $("#Titulo_Bienvenida_T").text(`Bienvenido a tu tienda !!` );    
+    $("#Subtitulo_Bienvenida_T").text(`Tu Dominio es ${Dominio_cli}.samishop.pe Escoje un template que se ajuste a tu estilo` );    
     
     $("#txtCorreo").val(Correo_cli);    
     const Toast = Swal.mixin({
@@ -792,6 +793,7 @@ function registrar_dominio(){
                     "plan": "plan-empresa"
                 }        ,
                 function(data){
+                    console.log(data);
                     if(data.bEstado == true) {
                         Toast.fire({
                         icon: 'success',
@@ -838,7 +840,7 @@ function Finalizar_CreaTienda(){
         if( ValidarContrasenas() == false) {
             throw Error("las contraseñas no coinciden");
         } 
-        console.log(data_empresa, "data_empresa"); return;
+        console.log(data_empresa, "data_empresa"); 
      // REGISTRAR DOMINIO
      registrar_dominio();
         $.post("http://localhost:7000/enterprises",
@@ -880,11 +882,7 @@ function Finalizar_CreaTienda(){
             } 
         }); 
         //ENVIAR CORREO DE BIENVENIDA
-        $('body').waitMe({
-            effect: 'facebook',
-            text: 'Creando su tienda ...',
-            color: '#0E073C'
-        })
+        
     $.post("http://localhost:9000/users/administrador/correobienvenida/enviar",
         {
             "correo": Correo_cli,
@@ -899,7 +897,15 @@ function Finalizar_CreaTienda(){
                 title: 'Ocurrio un Problema'
                 })
             } else {       
-                window.location.href = "./layouts-hori-boxed-width-3.html";
+                $('body').waitMe({
+                    effect: 'facebook',
+                    text: 'Creando su tienda ...',
+                    color: '#0E073C'
+                    })
+                setInterval(() => {
+                    $('body').waitMe("hide");
+                    window.location.href = "./layouts-hori-boxed-width-3.html";
+                }, 3500);                
             }
         });    
     }

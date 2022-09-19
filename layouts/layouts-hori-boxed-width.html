@@ -1033,7 +1033,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Dominio disponible, ingrese su correo para completar el registro</h5>
+                    <h5 class="modal-title">Dominio disponible</h5>
                     <button type="button" class="close cerrarModal" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -1041,7 +1041,7 @@
                 <div class="modal-body">
                   <div class="row">
                         <div class="col-sm-12">
-                            <label for="txtCorreoModal">Correo</label>
+                            <label for="txtCorreoModal">ingrese su correo para completar el registro</label>
                             <input type="text" class="form-control" id="txtCorreoModal" placeholder="nombre@ejemplo.com">
                         </div>
                   </div>
@@ -1107,7 +1107,8 @@
                     toast.addEventListener('mouseenter', Swal.stopTimer)
                     toast.addEventListener('mouseleave', Swal.resumeTimer)
                 }
-                })                
+                });             
+             
 function validarHost(){
     try {        
     let dominio = $("#txtDominio").val();
